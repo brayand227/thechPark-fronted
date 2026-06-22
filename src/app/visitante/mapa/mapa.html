@@ -1,0 +1,142 @@
+<div class="app-container">
+  <app-sidebar></app-sidebar>
+  
+  <div class="main-content">
+    <app-navbar></app-navbar>
+    
+    <div class="content-wrapper">
+      <div class="page-header">
+        <h1>🗺️ Mapa Interactivo del Parque</h1>
+        <p>Selecciona origen y destino para encontrar la mejor ruta</p>
+      </div>
+
+      <!-- Selectores de origen y destino -->
+      <div class="selector-panel">
+        <div class="selector-card">
+          <div class="selector-icon">📍</div>
+          <div class="selector-field">
+            <label>Punto de partida</label>
+            <select [(ngModel)]="origenId" class="form-select" (change)="onOrigenChange()">
+              <option [value]="0">Selecciona una atracción</option>
+              <option *ngFor="let a of atracciones" [value]="a.id">
+                {{ getIconoPorTipo(a.tipo) }} {{ a.nombre }}
+              </option>
+            </select>
+          </div>
+        </div>
+
+        <div class="selector-divider">
+          <i class="bi bi-arrow-right-short"></i>
+        </div>
+
+        <div class="selector-card">
+          <div class="selector-icon">🎯</div>
+          <div class="selector-field">
+            <label>Destino</label>
+            <select [(ngModel)]="destinoId" class="form-select" (change)="onDestinoChange()">
+              <option [value]="0">Selecciona una atracción</option>
+              <option *ngFor="let a of atracciones" [value]="a.id">
+                {{ getIconoPorTipo(a.tipo) }} {{ a.nombre }}
+              </option>
+            </select>
+          </div>
+        </div>
+
+        <div class="selector-actions">
+          <button class="btn-limpiar" (click)="limpiarRuta()" *ngIf="ruta">
+            <i class="bi bi-trash"></i> Limpiar
+          </button>
+        </div>
+      </div>
+
+      <!-- Loading -->
+      <div *ngIf="loading" class="loading">
+        <div class="spinner"></div>
+        <p>Cargando mapa del parque...</p>
+      </div>
+
+      <!-- Mapa visual con aristas -->
+      <div *ngIf="!loading" class="mapa-visual-container">
+        <div class="mapa-titulo">
+          <h3>🗺️ Mapa del Parque</h3>
+          <div class="leyenda">
+            <span class="leyenda-item"><span class="leyenda-color" style="background: #ff6b35;"></span> Mecánica</span>
+            <span class="leyenda-item"><span class="leyenda-color" style="background: #4cc9f0;"></span> Acuática</span>
+            <span class="leyenda-item"><span class="leyenda-color" style="background: #06ffa5;"></span> Infantil</span>
+            <span class="leyenda-item"><span class="leyenda-color" style="background: #7209b7;"></span> Show</span>
+            <span class="leyenda-item"><span class="leyenda-color" style="background: #2196f3;"></span> Ruta</span>
+          </div>
+        </div>
+        
+        <!-- Canvas para dibujar el mapa con aristas -->
+        <div class="mapa-canvas-container">
+          <canvas #mapCanvas 
+                  id="mapCanvas" 
+                  class="mapa-canvas" 
+                  width="900" 
+                  height="600"
+                  (mousemove)="onCanvasMouseMove($event)"
+                  (click)="onCanvasClick($event)">
+          </canvas>
+          
+          <!-- Tooltip de información -->
+          <div class="tooltip" *ngIf="tooltipVisible" [style.left]="tooltipX + 'px'" [style.top]="tooltipY + 'px'">
+            <strong>{{ tooltipAtraccion?.nombre }}</strong><br>
+            <small>{{ tooltipAtraccion?.tipo }}</small>
+          </div>
+        </div>
+
+        <!-- Leyenda de colores -->
+        <div class="leyenda-detalle">
+          <div class="leyenda-titulo">🟢 Verde: Inicio | 🔴 Rojo: Destino | 💙 Azul: Ruta óptima</div>
+          <div class="leyenda-tip">💡 Haz clic en cualquier atracción para seleccionarla como origen o destino</div>
+        </div>
+      </div>
+
+      <!-- Resultado de la ruta -->
+      <div *ngIf="ruta" class="ruta-resultado">
+        <div class="ruta-header">
+          <h3>🚶 Ruta más corta encontrada</h3>
+          <div class="ruta-resumen">
+            <div class="resumen-item">
+              <span class="resumen-icon">📏</span>
+              <span class="resumen-label">Distancia total</span>
+              <span class="resumen-valor">{{ ruta.distanciaTotal }} m</span>
+            </div>
+            <div class="resumen-item">
+              <span class="resumen-icon">⏱️</span>
+              <span class="resumen-label">Tiempo estimado</span>
+              <span class="resumen-valor">{{ ruta.tiempoEstimadoTotal }} min</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="ruta-pasos">
+          <div class="paso-titulo">📋 Instrucciones paso a paso:</div>
+          <div *ngFor="let paso of ruta.pasos; let i = index" class="paso-item">
+            <div class="paso-numero">{{ i + 1 }}</div>
+            <div class="paso-info">
+              <div class="paso-nombre">{{ paso.atraccionNombre }}</div>
+              <div class="paso-detalle" *ngIf="paso.distanciaDesdeAnterior > 0">
+                🚶 {{ paso.instruccion }} - <strong>{{ paso.distanciaDesdeAnterior }}m</strong>
+              </div>
+              <div class="paso-detalle" *ngIf="paso.distanciaDesdeAnterior === 0">
+                🏁 ¡Llegaste a tu destino!
+              </div>
+            </div>
+            <div class="paso-tiempo" *ngIf="paso.tiempoEstimado > 0">
+              {{ paso.tiempoEstimado }} min
+            </div>
+          </div>
+        </div>
+
+        <div class="ruta-mensaje">
+          <i class="bi bi-info-circle"></i>
+          {{ ruta.mensaje }}
+        </div>
+      </div>
+    </div>
+    
+    <app-footer></app-footer>
+  </div>
+</div>

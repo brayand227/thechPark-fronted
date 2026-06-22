@@ -1,0 +1,83 @@
+<div class="app-container">
+  <app-sidebar></app-sidebar>
+  
+  <div class="main-content">
+    <app-navbar></app-navbar>
+    
+    <div class="content-wrapper">
+      <div class="page-header">
+        <h1>💰 Recargar Saldo</h1>
+        <p>Agrega saldo a tu cuenta para disfrutar de atracciones con costo adicional</p>
+      </div>
+
+      <div class="recarga-container">
+        <!-- Saldo actual -->
+        <div class="saldo-card">
+          <div class="saldo-icon">💰</div>
+          <div class="saldo-info">
+            <span>Saldo Actual</span>
+            <h2>${{ saldoActual.toFixed(2) }}</h2>
+          </div>
+        </div>
+
+        <!-- Montos sugeridos -->
+        <div class="montos-sugeridos">
+          <h3>Monto a recargar</h3>
+          <div class="montos-grid">
+            <button *ngFor="let m of montosSugeridos" 
+                    class="monto-btn"
+                    [class.active]="monto === m"
+                    (click)="seleccionarMonto(m)">
+              ${{ m }}
+            </button>
+            <input type="number" 
+                   class="monto-input" 
+                   [(ngModel)]="monto" 
+                   (input)="actualizarMonto($event)"
+                   placeholder="Otro valor"
+                   min="1"
+                   step="1">
+          </div>
+        </div>
+
+        <!-- Método de pago -->
+        <div class="metodo-pago">
+          <h3>Método de pago</h3>
+          <div class="metodos-grid">
+            <label class="metodo-option">
+              <input type="radio" value="TARJETA" [(ngModel)]="metodoPago">
+              <span>💳 Tarjeta de crédito/débito</span>
+            </label>
+            <label class="metodo-option">
+              <input type="radio" value="PSE" [(ngModel)]="metodoPago">
+              <span>🏦 PSE</span>
+            </label>
+            <label class="metodo-option">
+              <input type="radio" value="EFECTIVO" [(ngModel)]="metodoPago">
+              <span>💰 Efectivo (taquilla)</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Botón de recarga -->
+        <button class="btn-recargar" (click)="recargar()" [disabled]="loading">
+          <span *ngIf="loading" class="spinner-border spinner-border-sm me-2"></span>
+          {{ loading ? 'Procesando...' : 'Recargar $' + (monto || 0) }}
+        </button>
+
+        <!-- Mensaje de éxito -->
+        <div *ngIf="recargaExitosa" class="alert alert-success mt-3">
+          <i class="bi bi-check-circle-fill me-2"></i>
+          ¡Recarga exitosa! Tu saldo ha sido actualizado.
+        </div>
+
+        <div class="info-nota">
+          <i class="bi bi-info-circle"></i>
+          <small>Los pagos son 100% seguros. El saldo se acredita instantáneamente.</small>
+        </div>
+      </div>
+    </div>
+    
+    <app-footer></app-footer>
+  </div>
+</div>

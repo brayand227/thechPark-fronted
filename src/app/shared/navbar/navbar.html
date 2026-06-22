@@ -1,0 +1,35 @@
+<nav class="navbar">
+  <div class="navbar-container">
+    <div class="navbar-left">
+      <button class="menu-toggle" (click)="toggleMobileSidebar()">
+        <i class="bi bi-list"></i>
+      </button>
+      <a routerLink="/" class="navbar-brand">
+        <span class="brand-icon">🎢</span>
+        <span class="brand-text">TechPark UQ</span>
+      </a>
+    </div>
+
+    <div class="navbar-right">
+      <div class="notifications">
+        <i class="bi bi-bell"></i>
+        <span class="notification-badge" *ngIf="false">3</span>
+      </div>
+      
+      <div class="user-dropdown">
+        <div class="user-avatar" (click)="mobileMenuOpen = !mobileMenuOpen">
+          {{ getInitials() }}
+        </div>
+        <div class="dropdown-menu" [class.show]="mobileMenuOpen">
+          <a routerLink="/perfil" class="dropdown-item">
+            <i class="bi bi-person"></i> Mi Perfil
+          </a>
+          <div class="dropdown-divider"></div>
+          <button (click)="logout()" class="dropdown-item text-danger">
+            <i class="bi bi-box-arrow-right"></i> Cerrar Sesión
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</nav>

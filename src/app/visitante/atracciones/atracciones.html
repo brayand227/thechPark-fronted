@@ -1,0 +1,153 @@
+<div class="app-container">
+  <app-sidebar></app-sidebar>
+
+  <div class="main-content">
+    <app-navbar></app-navbar>
+
+    <div class="content-wrapper">
+
+      <!-- Header -->
+      <div class="page-header">
+        <h1>🎢 Atracciones del Parque</h1>
+        <p>Descubre todas las emociones que te esperan en TechPark UQ</p>
+      </div>
+
+      <!-- Filtros -->
+      <div class="filtros">
+        <button
+          *ngFor="let tipo of tipos"
+          class="filtro-btn"
+          [class.active]="filtroTipo === tipo"
+          (click)="cambiarFiltro(tipo)">
+
+          {{ tipo === 'TODOS'
+              ? '📋 Todos'
+              : getIconoPorTipo(tipo) + ' ' + tipo }}
+        </button>
+      </div>
+
+      <!-- Loading -->
+      <div *ngIf="loading" class="loading">
+        <div class="spinner"></div>
+        <p>Cargando atracciones...</p>
+      </div>
+
+      <!-- Sin resultados -->
+      <div
+        *ngIf="!loading && atraccionesFiltradas.length === 0"
+        class="empty-state">
+
+        <div class="empty-icon">🎢</div>
+        <h3>No hay atracciones de este tipo</h3>
+        <p>Prueba con otro filtro</p>
+      </div>
+
+      <!-- Grid -->
+      <div
+        *ngIf="!loading && atraccionesFiltradas.length > 0"
+        class="atracciones-grid">
+
+        <div
+          *ngFor="let atraccion of atraccionesFiltradas"
+          class="atraccion-card">
+
+          <!-- Header Card -->
+          <div class="atraccion-header">
+
+            <span class="atraccion-icon">
+              {{ getIconoPorTipo(atraccion.tipo) }}
+            </span>
+
+            <span
+              class="atraccion-estado"
+              [style.backgroundColor]="getColorPorEstado(atraccion.estado)">
+
+              {{ getTextoEstado(atraccion.estado) }}
+            </span>
+
+          </div>
+
+          <!-- Info -->
+          <h3>{{ atraccion.nombre }}</h3>
+
+          <p class="atraccion-zona">
+            {{ atraccion.zonaNombre }}
+          </p>
+
+          <!-- Mensaje mantenimiento -->
+          <div
+            *ngIf="atraccion.estado === 'MANTENIMIENTO'"
+            class="mantenimiento-mensaje">
+
+            🔧 En mantenimiento. Volverá pronto.
+          </div>
+
+          <!-- Detalles -->
+          <div class="atraccion-detalles">
+
+            <div class="detalle">
+              <span>📏 Altura mínima</span>
+              <strong>{{ atraccion.alturaMinima }} m</strong>
+            </div>
+
+            <div class="detalle">
+              <span>🎂 Edad mínima</span>
+              <strong>{{ atraccion.edadMinima }} años</strong>
+            </div>
+
+            <div class="detalle">
+              <span>👥 Capacidad</span>
+              <strong>{{ atraccion.capacidadMaxima }} pers</strong>
+            </div>
+
+            <div class="detalle">
+              <span>⏱️ Espera</span>
+              <strong>{{ atraccion.tiempoEsperaEstimado }} min</strong>
+            </div>
+
+          </div>
+
+          <!-- Footer -->
+          <div class="atraccion-footer">
+
+            <div class="costo">
+
+              <span *ngIf="atraccion.costoAdicional > 0">
+                Costo adicional:
+                <strong>${{ atraccion.costoAdicional }}</strong>
+              </span>
+
+              <span
+                *ngIf="atraccion.costoAdicional === 0"
+                class="gratis">
+
+                Sin costo adicional
+              </span>
+
+            </div>
+
+            <!-- Botón -->
+            <button
+              class="btn-unirse"
+              (click)="unirseACola(atraccion.id)"
+              [disabled]="!puedeUnirse(atraccion.estado)"
+              [class.btn-disabled]="!puedeUnirse(atraccion.estado)">
+
+              {{ puedeUnirse(atraccion.estado)
+                  ? '🎟️ Unirse a cola'
+                  : '🔒 No disponible' }}
+
+            </button>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <app-footer></app-footer>
+
+  </div>
+</div>

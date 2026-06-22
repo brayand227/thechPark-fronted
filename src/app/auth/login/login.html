@@ -1,0 +1,196 @@
+<div class="login-container" @fadeIn>
+  <div class="login-wrapper">
+
+    <!-- Ilustración izquierda -->
+    <div class="login-illustration" @fadeInUp>
+      <div class="illustration-content">
+
+        <div class="hero-icon">🎢</div>
+
+        <h1 class="hero-title">
+          Tech<span class="highlight">Park</span> UQ
+        </h1>
+
+        <p class="hero-subtitle">
+          El parque de atracciones más innovador
+        </p>
+
+        <div class="features">
+
+          <div class="feature">
+            <span class="feature-icon">⚡</span>
+            <span>Colas Virtuales</span>
+          </div>
+
+          <div class="feature">
+            <span class="feature-icon">🎫</span>
+            <span>Fast-Pass Prioritario</span>
+          </div>
+
+          <div class="feature">
+            <span class="feature-icon">🗺️</span>
+            <span>Mapa Interactivo</span>
+          </div>
+
+          <div class="feature">
+            <span class="feature-icon">📱</span>
+            <span>Notificaciones en Tiempo Real</span>
+          </div>
+
+        </div>
+
+        <div class="stats">
+
+          <div class="stat">
+            <div class="stat-number">12+</div>
+            <div class="stat-label">Atracciones</div>
+          </div>
+
+          <div class="stat-divider"></div>
+
+          <div class="stat">
+            <div class="stat-number">50K+</div>
+            <div class="stat-label">Visitantes Felices</div>
+          </div>
+
+          <div class="stat-divider"></div>
+
+          <div class="stat">
+            <div class="stat-number">4.9⭐</div>
+            <div class="stat-label">Calificación</div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- Formulario de login derecho -->
+    <div class="login-form-container" @fadeInUp>
+
+      <div class="form-wrapper">
+
+        <div class="form-header">
+
+          <div class="welcome-badge">
+            <span>✨ Bienvenido de vuelta</span>
+          </div>
+
+          <h2>Iniciar Sesión</h2>
+
+          <p>
+            Accede a tu cuenta para disfrutar de todas las atracciones
+          </p>
+
+        </div>
+
+        <form (ngSubmit)="onSubmit()" class="login-form">
+
+          <!-- Campo Email -->
+          <div class="input-group-custom">
+            <div class="input-icon">
+              <i class="bi bi-envelope"></i>
+            </div>
+
+            <div class="input-field">
+              <input 
+                type="email"
+                [(ngModel)]="email"
+                name="email"
+                required
+                placeholder=" ">
+
+              <label>Correo Electrónico</label>
+            </div>
+          </div>
+
+          <!-- Campo Contraseña -->
+          <div class="input-group-custom">
+            <div class="input-icon">
+              <i class="bi bi-lock"></i>
+            </div>
+
+            <div class="input-field">
+              <input
+                [type]="showPassword ? 'text' : 'password'"
+                [(ngModel)]="password"
+                name="password"
+                required
+                placeholder=" ">
+
+              <label>Contraseña</label>
+
+              <button
+                type="button"
+                class="password-toggle"
+                (click)="togglePassword()">
+
+                <i [class]="showPassword ? 'bi bi-eye-slash' : 'bi bi-eye'"></i>
+
+              </button>
+            </div>
+          </div>
+
+          <!-- Opciones adicionales -->
+          <div class="form-options">
+
+            <label class="checkbox-custom">
+              <input
+                type="checkbox"
+                [(ngModel)]="rememberMe"
+                name="rememberMe">
+              <span class="checkmark"></span>
+              Recordarme
+            </label>
+
+            <a
+              routerLink="/forgot-password"
+              class="forgot-link">
+
+              ¿Olvidaste tu contraseña?
+            </a>
+
+          </div>
+
+          <!-- Botón de login - simplificado sin loading -->
+          <button type="submit" class="btn-login">
+            Ingresar
+            <i class="bi bi-arrow-right"></i>
+          </button>
+
+          <!-- Registro -->
+          <div class="register-prompt">
+
+            ¿No tienes una cuenta?
+
+            <a
+              routerLink="/registro"
+              class="register-link">
+
+              Regístrate aquí
+
+            </a>
+
+          </div>
+
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="login-footer">
+
+    <p>
+      © 2024 TechPark UQ - Parque de Atracciones Inteligente
+    </p>
+
+    <div class="footer-links">
+
+      <a href="#">Términos</a>
+      <a href="#">Privacidad</a>
+      <a href="#">Ayuda</a>
+
+    </div>
+
+  </footer>
+</div>

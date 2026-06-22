@@ -1,0 +1,499 @@
+.page-header {
+  margin-bottom: 2rem;
+}
+
+.page-header h1 {
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  color: #333;
+}
+
+.page-header p {
+  color: #666;
+}
+
+/* Panel de selectores */
+.selector-panel {
+  background: white;
+  border-radius: 20px;
+  padding: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-bottom: 2rem;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.selector-card {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.75rem;
+  background: #f8f9fa;
+  border-radius: 16px;
+}
+
+.selector-icon {
+  font-size: 1.5rem;
+}
+
+.selector-field {
+  flex: 1;
+}
+
+.selector-field label {
+  display: block;
+  font-size: 0.7rem;
+  color: #666;
+  margin-bottom: 0.25rem;
+}
+
+.form-select {
+  width: 100%;
+  padding: 0.5rem;
+  border: 2px solid #e9ecef;
+  border-radius: 12px;
+  background: white;
+  font-size: 0.85rem;
+}
+
+.selector-divider {
+  font-size: 2rem;
+  color: #667eea;
+}
+
+.selector-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.btn-calcular {
+  padding: 0.75rem 1.5rem;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.btn-calcular:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+}
+
+.btn-calcular:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.btn-limpiar {
+  padding: 0.75rem 1.5rem;
+  background: #e9ecef;
+  color: #333;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-limpiar:hover {
+  background: #dee2e6;
+}
+
+/* Mapa visual */
+.mapa-container {
+  background: white;
+  border-radius: 20px;
+  padding: 1rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  overflow-x: auto;
+}
+
+.mapa-titulo {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  border-bottom: 1px solid #e9ecef;
+  margin-bottom: 1rem;
+}
+
+.mapa-titulo h3 {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.btn-toggle {
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  cursor: pointer;
+  color: #666;
+}
+
+.mapa-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 1rem;
+  padding: 1rem;
+}
+
+.nodo-mapa {
+  background: #f8f9fa;
+  border-radius: 16px;
+  padding: 0.75rem;
+  text-align: center;
+  border-left: 4px solid;
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.nodo-mapa.origen {
+  background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+  transform: scale(1.02);
+}
+
+.nodo-mapa.destino {
+  background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%);
+  transform: scale(1.02);
+}
+
+.nodo-mapa.en-ruta {
+  background: linear-gradient(135deg, #e3f2fd 0%, #bbdef5 100%);
+  border-left-color: #2196f3 !important;
+}
+
+.nodo-icon {
+  font-size: 1.5rem;
+  margin-bottom: 0.25rem;
+}
+
+.nodo-nombre {
+  font-size: 0.7rem;
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+}
+
+.nodo-tipo {
+  font-size: 0.6rem;
+  color: #666;
+}
+
+.nodo-marcador {
+  font-size: 0.65rem;
+  background: #28a745;
+  color: white;
+  display: inline-block;
+  padding: 0.2rem 0.5rem;
+  border-radius: 12px;
+  margin-top: 0.5rem;
+}
+
+.nodo-marcador.destino {
+  background: #dc3545;
+}
+
+.nodo-orden {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background: #667eea;
+  color: white;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.7rem;
+  font-weight: 600;
+}
+
+/* Resultado de ruta */
+.ruta-resultado {
+  background: white;
+  border-radius: 20px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  animation: fadeInUp 0.5s ease;
+}
+
+.ruta-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-bottom: 1rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.ruta-header h3 {
+  margin: 0;
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+.ruta-resumen {
+  display: flex;
+  gap: 1.5rem;
+}
+
+.resumen-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+}
+
+.resumen-icon {
+  font-size: 1rem;
+}
+
+.resumen-label {
+  color: #666;
+}
+
+.resumen-valor {
+  font-weight: 700;
+  color: #28a745;
+}
+
+.ruta-pasos {
+  margin-bottom: 1rem;
+}
+
+.paso-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.75rem;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.paso-numero {
+  width: 28px;
+  height: 28px;
+  background: #f0f0f0;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.paso-info {
+  flex: 1;
+}
+
+.paso-nombre {
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.paso-detalle {
+  font-size: 0.7rem;
+  color: #666;
+}
+
+.paso-tiempo {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #28a745;
+}
+
+.ruta-mensaje {
+  background: #e8f5e9;
+  padding: 0.75rem;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  color: #2e7d32;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* Loading */
+.loading {
+  text-align: center;
+  padding: 3rem;
+}
+
+.spinner {
+  width: 50px;
+  height: 50px;
+  border: 3px solid #e9ecef;
+  border-top-color: #667eea;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 1rem;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .selector-panel {
+    flex-direction: column;
+  }
+  
+  .selector-card {
+    width: 100%;
+  }
+  
+  .selector-divider {
+    transform: rotate(90deg);
+  }
+  
+  .selector-actions {
+    width: 100%;
+  }
+  
+  .btn-calcular, .btn-limpiar {
+    flex: 1;
+  }
+  
+  .ruta-header {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+}
+/* Estilos existentes... */
+
+/* Mapa visual con canvas */
+.mapa-visual-container {
+  background: #1a1a2e;
+  border-radius: 20px;
+  padding: 1rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+.mapa-titulo {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  margin-bottom: 1rem;
+  color: white;
+}
+
+.mapa-titulo h3 {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.leyenda {
+  display: flex;
+  gap: 1rem;
+}
+
+.leyenda-item {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.7rem;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.leyenda-color {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.leyenda-detalle {
+  text-align: center;
+  margin-top: 0.5rem;
+  font-size: 0.7rem;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.mapa-canvas-container {
+  position: relative;
+  overflow-x: auto;
+  border-radius: 12px;
+  background: #0f0f1a;
+}
+
+.mapa-canvas {
+  display: block;
+  margin: 0 auto;
+  width: 100%;
+  height: auto;
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+  border-radius: 12px;
+  cursor: pointer;
+}
+
+/* Tooltip */
+.tooltip {
+  position: fixed;
+  background: rgba(0, 0, 0, 0.9);
+  color: white;
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 0.75rem;
+  pointer-events: none;
+  z-index: 1000;
+  white-space: nowrap;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  border-left: 3px solid #ff6b35;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .leyenda {
+    display: none;
+  }
+  
+  .mapa-canvas {
+    min-width: 600px;
+  }
+}
+.leyenda-tip {
+  margin-top: 8px;
+  font-size: 0.7rem;
+  color: #ffb703;
+}
+
+.btn-limpiar {
+  padding: 0.6rem 1.2rem;
+  background: #dc3545;
+  color: white;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.3s ease;
+}
+
+.btn-limpiar:hover {
+  background: #c82333;
+  transform: translateY(-2px);
+}

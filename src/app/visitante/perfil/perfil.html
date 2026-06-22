@@ -1,0 +1,112 @@
+<div class="app-container">
+  <app-sidebar></app-sidebar>
+  
+  <div class="main-content">
+    <app-navbar></app-navbar>
+    
+    <div class="content-wrapper">
+      <div class="page-header">
+        <h1>👤 Mi Perfil</h1>
+        <p>Administra tu información personal</p>
+      </div>
+
+      <div class="perfil-container">
+        <!-- Información personal -->
+        <div class="card">
+          <div class="card-header">
+            <h3>Información Personal</h3>
+            <button *ngIf="!editando" class="btn-edit" (click)="editarPerfil()">
+              ✏️ Editar
+            </button>
+          </div>
+          
+          <div class="card-body" *ngIf="!editando">
+            <div class="info-row">
+              <span class="info-label">Nombre:</span>
+              <span class="info-value">{{ usuario?.nombre || 'No registrado' }}</span>
+            </div>
+            <div class="info-row">
+              <span class="info-label">Correo Electrónico:</span>
+              <span class="info-value">{{ usuario?.email || 'No registrado' }}</span>
+            </div>
+            <div class="info-row">
+              <span class="info-label">Documento:</span>
+              <span class="info-value">{{ usuario?.documento || 'No registrado' }}</span>
+            </div>
+            <div class="info-row">
+              <span class="info-label">Edad:</span>
+              <span class="info-value">{{ usuario?.edad || 'No registrada' }} años</span>
+            </div>
+            <div class="info-row">
+              <span class="info-label">Estatura:</span>
+              <span class="info-value">{{ usuario?.estatura || 'No registrada' }} m</span>
+            </div>
+            <div class="info-row">
+              <span class="info-label">Rol:</span>
+              <span class="info-value">{{ usuario?.rol || 'No registrado' }}</span>
+            </div>
+            <div class="info-row">
+              <span class="info-label">Saldo Virtual:</span>
+              <span class="info-value saldo">${{ (usuario?.saldoVirtual || 0).toFixed(2) }}</span>
+            </div>
+          </div>
+          
+          <div class="card-body" *ngIf="editando">
+            <div class="form-group">
+              <label>Nombre</label>
+              <input type="text" class="form-control" [(ngModel)]="perfilEdit.nombre">
+            </div>
+            <div class="form-group">
+              <label>Correo Electrónico</label>
+              <input type="email" class="form-control" [(ngModel)]="perfilEdit.email">
+            </div>
+            <div class="form-group">
+              <label>Documento</label>
+              <input type="text" class="form-control" [(ngModel)]="perfilEdit.documento">
+            </div>
+            <div class="form-group">
+              <label>Edad</label>
+              <input type="number" class="form-control" [(ngModel)]="perfilEdit.edad" min="0" max="120">
+            </div>
+            <div class="form-group">
+              <label>Estatura (metros)</label>
+              <input type="number" class="form-control" [(ngModel)]="perfilEdit.estatura" step="0.01" min="0.5" max="2.5">
+            </div>
+            <div class="form-buttons">
+              <button class="btn-cancel" (click)="cancelarEdicion()">Cancelar</button>
+              <button class="btn-save" (click)="guardarPerfil()" [disabled]="loading">
+                {{ loading ? 'Guardando...' : 'Guardar cambios' }}
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Cambiar contraseña -->
+        <div class="card">
+          <div class="card-header">
+            <h3>🔐 Cambiar Contraseña</h3>
+          </div>
+          <div class="card-body">
+            <div class="form-group">
+              <label>Contraseña Actual</label>
+              <input type="password" class="form-control" [(ngModel)]="passwordActual" placeholder="••••••">
+            </div>
+            <div class="form-group">
+              <label>Nueva Contraseña</label>
+              <input type="password" class="form-control" [(ngModel)]="passwordNueva" placeholder="Mínimo 6 caracteres">
+            </div>
+            <div class="form-group">
+              <label>Confirmar Nueva Contraseña</label>
+              <input type="password" class="form-control" [(ngModel)]="confirmPassword" placeholder="••••••">
+            </div>
+            <button class="btn-change-password" (click)="cambiarPassword()" [disabled]="cambiandoPassword">
+              {{ cambiandoPassword ? 'Actualizando...' : 'Actualizar Contraseña' }}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <app-footer></app-footer>
+  </div>
+</div>

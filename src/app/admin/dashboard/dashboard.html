@@ -1,0 +1,53 @@
+<app-navbar></app-navbar>
+
+<div class="container-fluid px-4 mt-4">
+  <!-- Welcome Banner -->
+  <div class="welcome-banner card-hover fadeInUp mb-4">
+    <div class="banner-content">
+      <div>
+        <h1 class="display-5 fw-bold">Bienvenido, Administrador</h1>
+        <p class="lead mb-0">Aquí puedes gestionar todo el parque desde un solo lugar</p>
+      </div>
+      <div class="banner-icon">
+        🎢
+      </div>
+    </div>
+  </div>
+
+  <!-- Stats Cards -->
+  <div class="row g-4 mb-4">
+    <div class="col-md-3" *ngFor="let stat of stats">
+      <div class="stat-card card-hover fadeInUp" [style.animation-delay]="stat.delay">
+        <div class="stat-icon" [style.background]="stat.gradient">
+          {{ stat.icon }}
+        </div>
+        <div class="stat-info">
+          <h3 class="stat-value">{{ stat.value }}</h3>
+          <p class="stat-label">{{ stat.label }}</p>
+          <span class="stat-trend" [class.positive]="stat.trend > 0" [class.negative]="stat.trend < 0">
+            {{ stat.trend > 0 ? '+' : '' }}{{ stat.trend }}%
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Quick Actions -->
+  <div class="row g-4">
+    <div class="col-md-12">
+      <div class="section-title">
+        <h3>Acciones Rápidas</h3>
+        <p>Gestiona el parque de forma eficiente</p>
+      </div>
+    </div>
+    <div class="col-md-3" *ngFor="let action of quickActions">
+      <a [routerLink]="action.link" class="text-decoration-none">
+        <div class="action-card card-hover fadeInUp">
+          <div class="action-icon">{{ action.icon }}</div>
+          <h5>{{ action.title }}</h5>
+          <p>{{ action.description }}</p>
+        </div>
+      </a>
+    </div>
+  </div>
+</div>

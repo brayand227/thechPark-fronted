@@ -1,0 +1,192 @@
+<div class="app-container">
+  <app-sidebar></app-sidebar>
+  
+  <div class="main-content">
+    <app-navbar></app-navbar>
+    
+    <div class="content-wrapper">
+      <div class="page-header">
+        <h1>🔧 Mantenimiento de Atracciones</h1>
+        <div class="header-actions">
+          <button class="btn-historial" (click)="toggleHistorial()">
+            {{ mostrandoHistorial ? '📋 Ver Alertas' : '📜 Ver Historial' }}
+          </button>
+        </div>
+      </div>
+
+      <!-- Alertas activas -->
+      <div *ngIf="!mostrandoHistorial">
+        <div class="row g-4">
+          <div class="col-md-5">
+            <div class="alertas-card">
+              <div class="card-header-custom">
+                <h3>⚠️ Alertas Pendientes</h3>
+                <span class="alertas-count">{{ alertas.length }}</span>
+              </div>
+              
+              <div *ngIf="alertas.length === 0" class="sin-alertas">
+                <div class="empty-icon">✅</div>
+                <p>No hay alertas de mantenimiento</p>
+                <small>Todas las atracciones están en buen estado</small>
+              </div>
+              
+              <div *ngFor="let alerta of alertas" class="alerta-item" [class.alta]="alerta.prioridad === 'ALTA'">
+                <div class="alerta-icon">⚠️</div>
+                <div class="alerta-info">
+                  <strong>{{ alerta.atraccionNombre }}</strong>
+                  <small class="alerta-prioridad" [class.prioridad-alta]="alerta.prioridad === 'ALTA'">
+                    {{ getTextoPrioridad(alerta.prioridad) }}
+                  </small>
+                  <p>{{ alerta.descripcion || 'Requiere mantenimiento' }}</p>
+                  <div class="alerta-progreso">
+                    <div class="progress-bar-small">
+                      <div class="progress-fill" [style.width.%]="(alerta.visitantesAcumulados / 500) * 100"></div>
+                    </div>
+                    <span>{{ alerta.visitantesAcumulados }}/500 visitantes</span>
+                  </div>
+                </div>
+                <div class="alerta-acciones">
+                  <button class="btn-seleccionar" (click)="seleccionarAtraccion(alerta.atraccionId)">
+                    Seleccionar
+                  </button>
+                  <button class="btn-reactivar" (click)="reactivarAtraccion(alerta.atraccionId, alerta.atraccionNombre)">
+                    Reactivar
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-7">
+            <div class="registro-card">
+              <div class="card-header-custom">
+                <h3>📝 Registrar Revisión Técnica</h3>
+              </div>
+              
+              <div class="registro-body">
+                <div class="form-group">
+                  <label>🎢 Atracción</label>
+                  <select [(ngModel)]="atraccionSeleccionada" class="form-select" (change)="onAtraccionChange()">
+                    <option [value]="0">-- Selecciona una atracción --</option>
+                    <option *ngFor="let a of atracciones" [value]="a.id">
+                      🎢 {{ a.nombre }} - {{ getTextoEstado(a.estado) }} ({{ a.contadorVisitantes }}/500 visitantes)
+                    </option>
+                  </select>
+                </div>
+
+                <div class="form-group" *ngIf="atraccionSeleccionada > 0">
+                  <label>📊 Información de la atracción</label>
+                  <div class="info-box">
+                    <div class="info-row">
+                      <span>Estado actual:</span>
+                      <strong [style.color]="getColorEstado(getEstadoAtraccion())">
+                        {{ getTextoEstado(getEstadoAtraccion()) }}
+                      </strong>
+                    </div>
+                    <div class="info-row">
+                      <span>Visitantes acumulados:</span>
+                      <strong>{{ getVisitantesAtraccion() }}/500</strong>
+                    </div>
+                    <div class="progress-bar-container">
+                      <div class="progress-bar-fill" [style.width.%]="getPorcentajeVisitantes()"
+                           [style.background]="getPorcentajeVisitantes() > 80 ? '#dc3545' : (getPorcentajeVisitantes() > 60 ? '#ffc107' : '#28a745')">
+                      </div>
+                    </div>
+                    <div class="info-row" *ngIf="getPorcentajeVisitantes() >= 100">
+                      <span class="text-danger">⚠️ ¡Esta atracción necesita mantenimiento urgente!</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="form-group" *ngIf="atraccionSeleccionada > 0">
+                  <label>⚙️ Acciones Rápidas</label>
+                  <div class="action-buttons">
+                    <button class="btn-mantenimiento" (click)="ponerEnMantenimiento()" 
+                            [disabled]="getEstadoAtraccion() === 'MANTENIMIENTO'">
+                      🔧 Poner en Mantenimiento
+                    </button>
+                    <button class="btn-reactivar-manual" (click)="reactivarAtraccion(atraccionSeleccionada, getNombreAtraccionSeleccionada())"
+                            [disabled]="getEstadoAtraccion() !== 'MANTENIMIENTO'">
+                      ✅ Reactivar
+                    </button>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label>📝 Comentario</label>
+                  <textarea [(ngModel)]="comentario" class="form-textarea" 
+                            placeholder="Describe el mantenimiento realizado..."
+                            rows="3"></textarea>
+                </div>
+
+                <div class="form-actions">
+                  <button type="button" class="btn-limpiar" (click)="limpiarFormulario()">
+                    🧹 Limpiar
+                  </button>
+                  <button type="button" class="btn-registrar" (click)="registrarRevision()" 
+                          [disabled]="registrando || atraccionSeleccionada === 0">
+                    <span *ngIf="registrando" class="spinner-border spinner-border-sm me-2"></span>
+                    {{ registrando ? 'Registrando...' : '✅ Registrar Revisión' }}
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Historial de mantenimiento -->
+      <div *ngIf="mostrandoHistorial" class="historial-card">
+        <div class="card-header-custom">
+          <h3>📜 Historial de Mantenimiento</h3>
+          <span class="historial-count">{{ historial.length }} registros</span>
+        </div>
+        
+        <div *ngIf="historial.length === 0" class="sin-historial">
+          <div class="empty-icon">📋</div>
+          <p>No hay registros de mantenimiento</p>
+        </div>
+        
+        <div class="historial-table" *ngIf="historial.length > 0">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Fecha</th>
+                <th>Atracción</th>
+                <th>Tipo</th>
+                <th>Prioridad</th>
+                <th>Operador</th>
+                <th>Estado</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of historial">
+                <td>{{ item.fechaGeneracion | date:'dd/MM/yyyy HH:mm' }}</td>
+                <td><strong>{{ item.atraccionNombre }}</strong></td>
+                <td>
+                  <span class="tipo-badge" [class.correctiva]="item.tipoAlerta === 'CORRECTIVA'">
+                    {{ item.tipoAlerta === 'CORRECTIVA' ? '🔧 Correctiva' : '📋 Preventiva' }}
+                  </span>
+                </td>
+                <td>
+                  <span class="prioridad-badge" [class.alta]="item.prioridad === 'ALTA'"
+                                             [class.media]="item.prioridad === 'MEDIA'">
+                    {{ item.prioridad === 'ALTA' ? '🚨 ALTA' : (item.prioridad === 'MEDIA' ? '⚠️ MEDIA' : '📋 BAJA') }}
+                  </span>
+                </td>
+                <td>{{ item.operadorNombre || 'Sistema' }}</td>
+                <td>
+                  <span class="estado-badge" [class.resuelta]="item.estado === 'RESUELTA'">
+                    {{ item.estado === 'RESUELTA' ? '✅ Resuelta' : '⏳ Pendiente' }}
+                  </span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    
+    <app-footer></app-footer>
+  </div>
+</div>

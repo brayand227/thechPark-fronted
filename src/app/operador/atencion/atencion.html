@@ -1,0 +1,160 @@
+<div class="app-container">
+  <app-sidebar></app-sidebar>
+
+  <div class="main-content">
+    <app-navbar></app-navbar>
+
+    <div class="content-wrapper">
+
+      <!-- HEADER -->
+      <div class="page-header">
+        <h1>🎟️ Atención al Visitante</h1>
+        <p>Gestiona las colas virtuales y atiende a los visitantes</p>
+      </div>
+
+      <div class="row g-4">
+
+        <!-- SELECTOR -->
+        <div class="col-md-4">
+          <div class="selector-card">
+            <h3>📋 Seleccionar Atracción</h3>
+
+            <!-- Loading -->
+            <div *ngIf="cargandoAtracciones" class="loading-small">
+              <div class="spinner-small"></div>
+              <p>Cargando atracciones...</p>
+            </div>
+
+            <!-- Select -->
+            <select
+              *ngIf="!cargandoAtracciones"
+              [(ngModel)]="atraccionSeleccionada"
+              class="form-select"
+              (change)="siguienteVisitante = null"
+            >
+              <option [value]="0">
+                -- Selecciona una atracción --
+              </option>
+
+              <option
+                *ngFor="let a of atracciones"
+                [value]="a.id"
+              >
+                🎢 {{ a.nombre }}
+                ({{ a.estado === 'ACTIVA' ? '🟢 Activa' : '🔴 Cerrada' }})
+              </option>
+            </select>
+
+            <button
+              class="btn-cargar"
+              (click)="cargarSiguiente()"
+              [disabled]="loading || !atraccionSeleccionada"
+            >
+              <span
+                *ngIf="loading"
+                class="spinner-border spinner-border-sm me-2"
+              ></span>
+
+              {{ loading ? 'Buscando...' : '🔍 Siguiente en cola' }}
+            </button>
+          </div>
+        </div>
+
+        <!-- CONTENIDO -->
+        <div class="col-md-8">
+
+          <!-- LOADING -->
+          <div *ngIf="loading" class="loading">
+            <div class="spinner"></div>
+            <p>Buscando siguiente visitante...</p>
+          </div>
+
+          <!-- VISITANTE -->
+          <div
+            *ngIf="!loading && siguienteVisitante"
+            class="atencion-card"
+          >
+            <div class="atencion-header">
+              <h3>🎟️ Siguiente Visitante</h3>
+            </div>
+
+            <div class="atencion-body">
+
+              <div class="visitante-info">
+
+                <div class="visitante-avatar">
+                  {{ siguienteVisitante.nombreVisitante?.charAt(0) || 'V' }}
+                </div>
+
+                <div class="visitante-detalles">
+                  <h4>{{ siguienteVisitante.nombreVisitante }}</h4>
+
+                  <p>
+                    🎫 Ticket:
+                    <strong>{{ siguienteVisitante.tipoTicket }}</strong>
+                  </p>
+
+                  <p>
+                    ⏰ Ingreso:
+                    {{ siguienteVisitante.horaIngreso | date:'HH:mm:ss' }}
+                  </p>
+
+                  <p>
+                    🆔 ID Visitante:
+                    {{ siguienteVisitante.visitanteId }}
+                  </p>
+                </div>
+
+              </div>
+
+              <button
+                class="btn-atender"
+                (click)="atender()"
+                [disabled]="atendiendo"
+              >
+                <span
+                  *ngIf="atendiendo"
+                  class="spinner-border spinner-border-sm me-2"
+                ></span>
+
+                {{ atendiendo ? 'Atendiendo...' : '✅ Atender Visitante' }}
+              </button>
+
+            </div>
+          </div>
+
+          <!-- SIN VISITANTES -->
+          <div
+            *ngIf="!loading && !siguienteVisitante && atraccionSeleccionada !== 0"
+            class="empty-state"
+          >
+            <div class="empty-icon">🎟️</div>
+
+            <h3>No hay visitantes en cola</h3>
+
+            <p>
+              Espera a que más visitantes se unan a esta atracción
+            </p>
+          </div>
+
+          <!-- SIN ATRACCION -->
+          <div
+            *ngIf="!loading && atraccionSeleccionada === 0"
+            class="empty-state"
+          >
+            <div class="empty-icon">🎯</div>
+
+            <h3>Selecciona una atracción</h3>
+
+            <p>
+              Elige una atracción para ver el siguiente en cola
+            </p>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <app-footer></app-footer>
+  </div>
+</div>

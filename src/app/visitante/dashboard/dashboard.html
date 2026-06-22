@@ -1,0 +1,275 @@
+<div class="app-container">
+
+  <app-sidebar></app-sidebar>
+
+  <div class="main-content">
+
+    <app-navbar></app-navbar>
+
+    <div class="content-wrapper">
+
+      <!-- Banner de bienvenida -->
+      <div class="welcome-banner">
+
+        <div class="banner-content">
+
+          <div>
+            <h1 class="display-5 fw-bold">
+              ¡Bienvenido, {{ usuario?.nombre || 'Visitante' }}! 🎢
+            </h1>
+
+            <p class="lead mb-0">
+              Prepárate para vivir una experiencia inolvidable en TechPark UQ
+            </p>
+          </div>
+
+          <div class="banner-icon">🎡</div>
+
+        </div>
+      </div>
+
+      <!-- Tarjetas de estadísticas -->
+      <div class="row g-4 mb-4">
+
+        <!-- Tarjeta 1 -->
+        <div class="col-md-3">
+
+          <div class="stat-card">
+
+            <div
+              class="stat-icon"
+              [style.background]="stats[0].color">
+
+              {{ stats[0].icon }}
+
+            </div>
+
+            <div class="stat-info">
+
+              <h3>{{ stats[0].value }}</h3>
+
+              <p>{{ stats[0].label }}</p>
+
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Tarjeta 2 -->
+        <div class="col-md-3">
+
+          <div class="stat-card">
+
+            <div
+              class="stat-icon"
+              [style.background]="stats[1].color">
+
+              {{ stats[1].icon }}
+
+            </div>
+
+            <div class="stat-info">
+
+              <h3>{{ stats[1].value }}</h3>
+
+              <p>{{ stats[1].label }}</p>
+
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Tarjeta de saldo -->
+        <div class="col-md-3">
+
+          <!-- Tarjeta de saldo - Usando variable directa -->
+          <div
+            class="stat-card clickable"
+            (click)="irARecarga()">
+
+            <div
+              class="stat-icon"
+              [style.background]="'#007bff'">
+
+              💰
+
+            </div>
+
+            <div class="stat-info">
+
+              <h3>${{ saldo.toFixed(2) }}</h3>
+
+              <p>Mi Saldo</p>
+
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Tarjeta 4 -->
+        <div class="col-md-3">
+
+          <div class="stat-card">
+
+            <div
+              class="stat-icon"
+              [style.background]="stats[3].color">
+
+              {{ stats[3].icon }}
+
+            </div>
+
+            <div class="stat-info">
+
+              <h3>{{ stats[3].value }}</h3>
+
+              <p>{{ stats[3].label }}</p>
+
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Acciones rápidas -->
+      <div class="row g-4 mb-4">
+
+        <div class="col-md-12">
+
+          <div class="section-title">
+
+            <h3>Acciones Rápidas</h3>
+
+            <p>¿Qué deseas hacer hoy?</p>
+
+          </div>
+        </div>
+
+        <div class="col-md-4">
+
+          <a
+            routerLink="/visitante/atracciones"
+            class="action-card">
+
+            <div class="action-icon">🎢</div>
+
+            <h5>Ver Atracciones</h5>
+
+            <p>
+              Explora todas las atracciones disponibles
+            </p>
+
+          </a>
+        </div>
+
+        <div class="col-md-4">
+
+          <a
+            routerLink="/visitante/colas"
+            class="action-card">
+
+            <div class="action-icon">🎫</div>
+
+            <h5>Mis Colas</h5>
+
+            <p>
+              Consulta el estado de tus colas virtuales
+            </p>
+
+          </a>
+        </div>
+
+        <div class="col-md-4">
+
+          <a
+            routerLink="/visitante/mapa"
+            class="action-card">
+
+            <div class="action-icon">🗺️</div>
+
+            <h5>Mapa del Parque</h5>
+
+            <p>
+              Encuentra tu camino y descubre el parque
+            </p>
+
+          </a>
+        </div>
+
+      </div>
+
+      <!-- Atracciones destacadas -->
+      <div class="row g-4">
+
+        <div class="col-md-12">
+
+          <div class="section-title">
+
+            <h3>🎢 Atracciones Destacadas</h3>
+
+            <p>
+              Las favoritas de nuestros visitantes
+            </p>
+
+          </div>
+        </div>
+
+        <div
+          class="col-md-3"
+          *ngFor="let atraccion of atraccionesDestacadas">
+
+          <div class="atraccion-card">
+
+            <div class="atraccion-icon">
+              {{ getIconoPorTipo(atraccion.tipo) }}
+            </div>
+
+            <h5>{{ atraccion.nombre }}</h5>
+
+            <p class="atraccion-tipo">
+              {{ atraccion.tipo }}
+            </p>
+
+            <div class="atraccion-stats">
+
+              <span>
+                ⏱️ {{ atraccion.tiempoEsperaEstimado }} min
+              </span>
+
+              <span>
+                🎫 ${{ atraccion.costoAdicional || 0 }}
+              </span>
+
+            </div>
+
+            <div
+              class="atraccion-estado"
+              [class.activa]="atraccion.estado === 'ACTIVA'">
+
+              {{
+                atraccion.estado === 'ACTIVA'
+                  ? '🟢 Disponible'
+                  : '🔴 Cerrada'
+              }}
+
+            </div>
+
+            <a
+              [routerLink]="['/visitante/atracciones', atraccion.id]"
+              class="btn-unirse">
+
+              Unirse a Cola
+
+            </a>
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <app-footer></app-footer>
+
+  </div>
+</div>

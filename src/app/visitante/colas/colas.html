@@ -1,0 +1,60 @@
+<div class="app-container">
+  <app-sidebar></app-sidebar>
+  
+  <div class="main-content">
+    <app-navbar></app-navbar>
+    
+    <div class="content-wrapper">
+      <div class="page-header">
+        <h1>🎫 Mis Colas Virtuales</h1>
+        <p>Consulta el estado de tus colas activas</p>
+      </div>
+
+      <!-- Loading -->
+      <div *ngIf="loading" class="loading">
+        <div class="spinner"></div>
+        <p>Cargando tus colas...</p>
+      </div>
+
+      <!-- Sin colas activas -->
+      <div *ngIf="!loading && misColas.length === 0" class="empty-state">
+        <div class="empty-icon">🎫</div>
+        <h3>No tienes colas activas</h3>
+        <p>Únete a una atracción para aparecer aquí</p>
+        <a routerLink="/visitante/atracciones" class="btn-primary">Ver Atracciones</a>
+      </div>
+
+      <!-- Lista de colas -->
+      <div *ngIf="!loading && misColas.length > 0" class="colas-list">
+        <div *ngFor="let cola of misColas" class="cola-card">
+          <div class="cola-info">
+            <div class="cola-icon">🎢</div>
+            <div class="cola-details">
+              <h3>{{ cola.atraccionNombre }}</h3>
+              <p>Te uniste el {{ cola.fechaIngreso | date:'dd/MM/yyyy HH:mm' }}</p>
+              <span class="cola-estado" style="background-color: #28a745;">
+                {{ obtenerTextoEstado('EN_COLA') }}
+              </span>
+            </div>
+          </div>
+          
+          <div class="cola-status">
+            <div class="posicion" [style.color]="obtenerColorPosicion(cola.posicion)">
+              <span class="posicion-numero">{{ cola.posicion }}</span>
+              <span class="posicion-label">posición</span>
+            </div>
+            <div class="tiempo">
+              <span>⏱️ {{ cola.tiempoEstimado }} min</span>
+            </div>
+          </div>
+          
+          <button class="btn-cancelar" (click)="cancelarCola(cola)">
+            Cancelar
+          </button>
+        </div>
+      </div>
+    </div>
+    
+    <app-footer></app-footer>
+  </div>
+</div>

@@ -1,0 +1,153 @@
+<div class="app-container">
+  <app-sidebar></app-sidebar>
+  
+  <div class="main-content">
+    <app-navbar></app-navbar>
+    
+    <div class="content-wrapper">
+      <div class="page-header">
+        <h1>🔧 Panel de Control - Operador</h1>
+        <p>Gestiona las atracciones y atiende a los visitantes</p>
+      </div>
+
+      <!-- Botón de actualizar -->
+      <div class="refresh-btn-container">
+        <button class="btn-refresh" (click)="actualizarDatos()">
+          🔄 Actualizar Datos
+        </button>
+      </div>
+
+      <!-- Tarjetas de estadísticas -->
+      <div class="row g-4 mb-4">
+        <div class="col-md-3" *ngFor="let stat of stats">
+          <div class="stat-card">
+            <div class="stat-icon" [style.background]="stat.color">{{ stat.icon }}</div>
+            <div class="stat-info">
+              <h3>{{ stat.value }}</h3>
+              <p>{{ stat.label }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Atracciones con colas activas -->
+      <div class="row g-4 mb-4">
+        <div class="col-md-12">
+          <div class="section-title">
+            <h3>🎟️ Atracciones con Colas Activas</h3>
+            <p>Selecciona una atracción para atender visitantes</p>
+          </div>
+        </div>
+        
+        <div *ngIf="atraccionesConColas.length === 0" class="col-12">
+          <div class="empty-state-small">
+            <p>No hay colas activas en este momento</p>
+          </div>
+        </div>
+        
+        <div class="col-md-4" *ngFor="let atraccion of atraccionesConColas">
+          <div class="atraccion-cola-card" (click)="irAAtencion(atraccion.id)">
+            <div class="atraccion-cola-header">
+              <span class="atraccion-icon">{{ obtenerIconoPorTipo(atraccion.tipo) }}</span>
+              <span class="atraccion-estado" [class.cerrada]="atraccion.estado !== 'ACTIVA'">
+                {{ atraccion.estado === 'ACTIVA' ? '🟢 Activa' : '🔴 Cerrada' }}
+              </span>
+            </div>
+            <h4>{{ atraccion.nombre }}</h4>
+            <div class="cola-stats">
+              <div class="cola-total">
+                <span class="cola-numero">{{ atraccion.colasPendientes }}</span>
+                <span class="cola-label">En cola</span>
+              </div>
+              <div class="cola-fastpass" *ngIf="atraccion.fastPassCount > 0">
+                <span class="fastpass-icon">⚡</span>
+                <span class="fastpass-numero">{{ atraccion.fastPassCount }}</span>
+                <span class="fastpass-label">Fast-Pass</span>
+              </div>
+            </div>
+            <button class="btn-atender-cola">🎟️ Atender Cola</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Alertas de mantenimiento -->
+      <div class="row g-4" *ngIf="alertas.length > 0">
+        <div class="col-md-12">
+          <div class="section-title">
+            <h3>⚠️ Alertas de Mantenimiento</h3>
+          </div>
+        </div>
+        <div class="col-md-12">
+          <div class="alertas-list">
+            <div *ngFor="let alerta of alertas" class="alerta-card" [class.alta]="alerta.prioridad === 'ALTA'" (click)="verDetalleAlerta(alerta)">
+              <div class="alerta-icon">⚠️</div>
+              <div class="alerta-info">
+                <h5>{{ alerta.atraccionNombre }}</h5>
+                <p>{{ alerta.descripcion || 'Requiere mantenimiento' }}</p>
+                <small>Prioridad: {{ alerta.prioridad }} | Visitantes: {{ alerta.visitantesAcumulados }}/500</small>
+              </div>
+              <a routerLink="/operador/mantenimiento" class="alerta-btn" (click)="$event.stopPropagation()">Atender</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Atracciones en riesgo (cerca del mantenimiento) -->
+      <div class="row g-4" *ngIf="atraccionesRiesgo.length > 0">
+        <div class="col-md-12">
+          <div class="section-title">
+            <h3>⚠️ Atracciones Cerca del Mantenimiento</h3>
+          </div>
+        </div>
+        <div class="col-md-12">
+          <div class="riesgo-list">
+            <div *ngFor="let atraccion of atraccionesRiesgo" class="riesgo-card">
+              <span class="riesgo-icon">🎢</span>
+              <span class="riesgo-nombre">{{ atraccion.nombre }}</span>
+              <span class="riesgo-contador">{{ atraccion.contadorVisitantes }}/500 visitantes</span>
+              <span class="riesgo-progreso">
+                <div class="progress-bar" [style.width.%]="(atraccion.contadorVisitantes / 500) * 100"></div>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="loading" class="loading">
+        <div class="spinner"></div>
+        <p>Cargando...</p>
+      </div>
+    </div>
+    
+    <app-footer></app-footer>
+  </div>
+</div>
+
+<!-- Modal de detalle de alerta -->
+<div *ngIf="alertaSeleccionada" class="modal-overlay" (click)="cerrarDetalleAlerta()">
+  <div class="modal-container" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h3>⚠️ Alerta de Mantenimiento</h3>
+      <button class="close-btn" (click)="cerrarDetalleAlerta()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="alerta-info">
+        <p><strong>Atracción:</strong> {{ alertaSeleccionada.atraccionNombre }}</p>
+        <p><strong>Visitantes acumulados:</strong> {{ alertaSeleccionada.visitantesAcumulados }}/500</p>
+        <p><strong>Prioridad:</strong> 
+          <span [class]="alertaSeleccionada.prioridad === 'ALTA' ? 'text-danger' : 'text-warning'">
+            {{ alertaSeleccionada.prioridad }}
+          </span>
+        </p>
+        <p><strong>Descripción:</strong> {{ alertaSeleccionada.descripcion }}</p>
+        <p><strong>Fecha:</strong> {{ alertaSeleccionada.fechaGeneracion | date:'dd/MM/yyyy HH:mm' }}</p>
+      </div>
+      <div class="modal-actions">
+        <button class="btn-cancelar" (click)="cerrarDetalleAlerta()">Cerrar</button>
+        <a routerLink="/operador/mantenimiento" class="btn-atender" (click)="cerrarDetalleAlerta()">
+          Ir a Mantenimiento
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
